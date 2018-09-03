@@ -8,11 +8,10 @@ if(n<0) {
 }
 else if(n>0) {
 	System.out.println(n+"the value is  positive");
-}
+        }
 else 
 {
 	System.out.println("the value is zero");
-}
-	}
-
-}
+       }
+	 }
+           }
