@@ -1,0 +1,527 @@
+selenium:
+CHROME PATH:
+	WebDriver driver = new ChromeDriver();  ---after creating class name
+SYSTEM PROPERTY
+	System.setProperty("webdriver.chrome.driver", "D:\\selenium\\chromedriver\\chromedriver.exe");     ----after psvm
+
+----
+driver.get(url);
+
+
+
+1.MAIN METHOD:
+
+package Gmail;
+import java.io.FileInputStream;
+import java.io.IOException;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import Gmail.Base;
+import Gmail.Login_Page;
+public class Add_User {
+	public static void main(String[] args) throws InterruptedException, IOException {
+		{
+			FileInputStream fis = new FileInputStream("D:\\xlsheet.xlsx");
+			//LOGIN TO SITE
+			Base.openURL();
+			Login_Page.login();
+			Dashboard_portal. Dashboard_portall("tms");
+			System.out.println("jeevi");
+			Dashboard_portal. Dashboard_portall("hr");
+		}
+	}
+}
+  
+
+2.STATIC KEY WORD FOR CALLING WEBDRIVER  GLOBALLY:
+package Gmail;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import org.apache.poi.sl.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+public class Base {
+
+	public static WebDriver driver = null;
+	public static void openURL()
+	{
+
+		try{
+
+			System.setProperty("webdriver.chrome.driver", "D:\\selenium\\chromedriver\\chromedriver.exe"); 
+			driver = new ChromeDriver();
+			driver.get("https://support.kumaran.com/krc/general/login.php?logout=true");
+
+		}
+		catch(Exception E)
+
+		{
+			E.printStackTrace();
+
+
+		}
+	}
+
+
+}
+--------------------------------------------------------
+3.
+package Gmail;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.apache.poi.sl.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+import com.google.common.collect.Table.Cell;
+
+
+public class Login_Page  {
+	public static void login() throws InterruptedException, IOException
+	{
+		FileInputStream fis = new FileInputStream("D:\\xlsheet.xlsx");
+		XSSFWorkbook workbook = new XSSFWorkbook(fis);
+		XSSFSheet sheet = workbook.getSheetAt(0);
+		XSSFCell cell1 =sheet.getRow(1).getCell(3);
+		String username=cell1.toString();
+		XSSFCell cell2 =sheet.getRow(1).getCell(4);
+		int value = (int) cell2.getNumericCellValue();
+	
+		String password=String.valueOf(value);
+		Base.driver.manage().window().maximize();
+		Base.driver.findElement(By.xpath("//input[@name='loginForm']")).sendKeys(username);
+		Base.driver.findElement(By.name("passwordForm")).sendKeys(password);
+		Base.driver.findElement(By.name("save")).click();
+
+
+	}
+}
+------------------------------------------
+package Gmail;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class Dashboard_portal {
+	//HR_portal obj=new HR_portal();
+	public static WebDriver driver;
+	static void Dashboard_portall(String portal_name) throws InterruptedException, IOException  {
+		switch(portal_name){
+		case "hr":
+			System.out.println("jeevi");
+			HR_portal.hr();
+			break;
+		case "tms":
+			
+		Tms.tms();
+			break;
+		default:
+			break;
+		}
+
+	}
+}
+--------------------------------------------------------------------------
+package Gmail;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class HR_portal extends Dashboard_portal {
+	public static WebDriver driver = null;
+	static Scanner sc=new Scanner(System.in);
+	public static  void hr() throws IOException, InterruptedException {
+System.out.println("hr");
+Thread.sleep(2000);
+		Base.driver.findElement(By.linkText("HR")).click();
+		String parentWinHandle = Base.driver.getWindowHandle();
+		WebDriverWait wait = new WebDriverWait(Base.driver,3);
+
+		Base.driver.findElement(By.linkText("Associate Handbook")).click();
+		Base.driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
+		Base.driver.navigate().back();
+
+		Base.driver.findElement(By.linkText("Pay Slip")).click();
+		Base.driver.navigate().back();
+
+		//	WebDriverWait wait = new WebDriverWait(Base.driver,3);
+		wait.until(ExpectedConditions.elementToBeClickable((By.linkText("PMS"))));
+		Base.driver.findElement(By.linkText("PMS")).click();
+		Base.driver.switchTo().window(parentWinHandle);				
+
+
+		wait.until(ExpectedConditions.elementToBeClickable((By.linkText("Skill Set"))));
+		Base.driver.findElement(By.linkText("Skill Set")).click();
+		Base.driver.switchTo().window(parentWinHandle);	
+
+
+		wait.until(ExpectedConditions.elementToBeClickable((By.linkText("Joining Kit"))));
+		Base.driver.findElement(By.linkText("Joining Kit")).click();
+		Base.driver.switchTo().window(parentWinHandle);	
+
+		wait.until(ExpectedConditions.elementToBeClickable((By.linkText("POSH"))));
+		Base.driver.findElement(By.linkText("POSH")).click();
+		Base.driver.switchTo().window(parentWinHandle);	
+
+
+		wait.until(ExpectedConditions.elementToBeClickable((By.linkText("PMS"))));
+		Base.driver.findElement(By.linkText("LMS")).click();
+		Base.driver.switchTo().window(parentWinHandle);	
+
+
+
+		wait.until(ExpectedConditions.elementToBeClickable((By.linkText("SSN"))));
+		Base.driver.findElement(By.linkText("SSN")).click();
+		Base.driver.navigate().back();
+
+		wait.until(ExpectedConditions.elementToBeClickable((By.linkText("KTax Slip"))));
+		Base.driver.findElement(By.linkText("KTax Slip")).click();
+		Base.driver.switchTo().window(parentWinHandle);	
+
+		wait.until(ExpectedConditions.elementToBeClickable((By.linkText("HR RESOURCE CENTRE"))));
+		Base.driver.findElement(By.linkText("HR RESOURCE CENTRE")).click();
+		Base.driver.switchTo().window(parentWinHandle);	
+		System.out.println("enter the title:");
+		
+		
+		
+		
+		FileInputStream fis = new FileInputStream("D:\\xlsheet.xlsx");
+		XSSFWorkbook workbook = new XSSFWorkbook(fis);
+		XSSFSheet sheet = workbook.getSheetAt(0);
+		Row row = sheet.getRow(0);
+		Cell cell = row.getCell(0);
+		XSSFCell cell0=sheet.getRow(2).getCell(5);
+		String Title=cell0.toString();
+		for(String winHandle : Base.driver.getWindowHandles()){
+
+			if (Base.driver.switchTo().window(winHandle).getTitle().equals(Title)) {
+				wait.until(ExpectedConditions.titleIs(Title));
+				break;
+			} 
+			else {
+				Base.driver.switchTo().window(parentWinHandle);
+			} 
+		}
+		Base.driver.findElement(By.linkText("Log Out")).click();
+	}
+
+
+}
+------------------------------------------------------------------------------------
+package Gmail;
+
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+//
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+public class Tms extends Dashboard_portal {
+	public static void tms() throws InterruptedException, IOException {
+
+		Base.driver.findElement(By.linkText("TMS")).click();
+		String winHandleBefore = Base.driver.getWindowHandle();
+		for(String winHandle : Base.driver.getWindowHandles()){
+			if(!winHandleBefore.equals(winHandle)){
+				System.out.println(winHandle);
+				Base.driver.switchTo().window(winHandle);
+				Scanner sc=new Scanner(System.in);
+
+				try {
+					Thread.sleep(1000);
+					FileInputStream fis = new FileInputStream("D:\\xlsheet.xlsx");
+					XSSFWorkbook workbook = new XSSFWorkbook(fis);
+					XSSFSheet sheet = workbook.getSheetAt(0);
+					Row row = sheet.getRow(0);
+					Cell cell = row.getCell(0);
+					XSSFCell cell0=sheet.getRow(4).getCell(2);
+					XSSFCell cell1 =sheet.getRow(5).getCell(2);
+					XSSFCell cell2 =sheet.getRow(6).getCell(2);
+					XSSFCell cell3 =sheet.getRow(7).getCell(2);
+					XSSFCell cell4 =sheet.getRow(8).getCell(2);
+					XSSFCell cell5 =sheet.getRow(9).getCell(2);
+
+					String value1=cell0.toString();
+					String  value2=cell1.toString();
+					String  value3=cell2.toString();
+					String  value4=cell3.toString();
+					String  value5=cell4.toString();
+					String  value6=cell5.toString();
+					//System.out.println(value1);
+					Base.driver.findElement(By.xpath("//button[@tooltip='Additional Entry']")).click();
+					Thread.sleep(1000);
+					Base.driver.findElement(By.id("divisionDD")).sendKeys(value1);
+					Base.driver.findElement(By.id("divisionDD")).sendKeys(Keys.ENTER); //insur
+					Base.driver.findElement(By.xpath("//input[@typeahead-on-select='accountOnSelected();']")).sendKeys(value2);
+					Base.driver.findElement(By.xpath("//input[@typeahead-on-select='accountOnSelected();']")).sendKeys(Keys.ENTER); //insu
+					Base.driver.findElement(By.xpath("//input[@typeahead-on-select=' projectOnSelected();']")).sendKeys(value3);
+					Base.driver.findElement(By.xpath("//input[@typeahead-on-select=' projectOnSelected();']")).sendKeys(Keys.ENTER); //insur
+					Base.driver.findElement(By.xpath("//input[@ng-model='selectData.selectedModule']")).sendKeys(value4);
+					Base.driver.findElement(By.xpath("//input[@ng-model='selectData.selectedModule']")).sendKeys(Keys.ENTER);  //misc
+					Base.driver.findElement(By.xpath("//input[@ng-model='selectData.selectedWorkProduct']")).sendKeys(value5);
+					Base.driver.findElement(By.xpath("//input[@ng-model='selectData.selectedWorkProduct']")).sendKeys(Keys.ENTER);   //other
+					Base.driver.findElement(By.xpath("//input[@ng-model='selectData.selectedTask']")).sendKeys(value6);
+					Base.driver.findElement(By.xpath("//input[@ng-model='selectData.selectedTask']")).sendKeys(Keys.ENTER);   //ana
+					Base.driver.findElement(By.xpath("//button[@class='btn btn-success btn-md']")).click();
+					XSSFCell celloption=sheet.getRow(4).getCell(5);
+					String option=celloption.toString();
+					System.out.println("enter the option");
+					System.out.println(option);
+					Thread.sleep(2000);
+					if(option.equals("delete")) {
+						Base.driver.findElement(By.xpath("//div[@class='ui-grid-selection-row-header-buttons ui-grid-icon-ok ng-
+
+scope']")).click();
+						Base.driver.findElement(By.xpath("//button[@tooltip='Delete']")).click();
+						Thread.sleep(3000);
+						Base.driver.findElement(By.xpath(("(//button[@class='btn btn-success'])[2]"))).click();
+					}
+				}
+				catch(Exception elementNotfound) {
+					Base.driver.findElement(By.xpath("//button[@tooltip='Additional Entry']")).click();
+					System.out.println(elementNotfound);
+				}
+
+			}
+		}
+		Thread.sleep(1000);
+
+		Base.driver.findElement(By.xpath("//a[@class='dropdown-toggle ng-binding']")).click();
+		Base.driver.findElement(By.xpath("//a[@ng-click='logOutUser()']")).click();
+		Thread.sleep(1000);
+		//Base.driver.findElement(By.linkText("Log Out")).click();
+	}
+
+
+}
+
+--------------------------------------------------------------
+
+
+
+SAMPLE METHOD:
+CLEAR:
+package Gmail;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class Clear_method {
+
+	WebDriver driver = new ChromeDriver();
+
+	public void clearLocators(String clear_identifier) {
+
+		//		WebDriver driver = new ChromeDriver();
+		switch(clear_identifier){
+		case "id Locator":
+			driver.findElement(By.id("src")).clear();
+			break;
+		case "CSS Selector Locator":
+			driver.findElement(By.cssSelector("input[type^='te']")).clear();
+			break;
+		case "class Name  Locator":
+			driver.findElement(By.className("db")).clear();
+			break;
+		case "Tag Name Locator":
+			driver.findElement(By.tagName("input")).clear();
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+CLICK_METHOD:
+package Gmail;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import Gmail.SendKeys;
+
+import java.io.*;
+public class Click_method {
+	WebDriver driver = new ChromeDriver();
+	
+public void click(String click_identifiers,String linktext_value ) {
+	driver.get("https://www.redbus.in");
+	switch(click_identifiers){
+	case "Lint text locator":
+		driver.findElement(By.linkText(linktext_value)).click();	
+		break;
+	case "Partial link text Locator":
+		driver.findElement(By.partialLinkText(linktext_value)).click();	
+		break;
+	default:
+		break;
+	}
+}
+}
+-------------------------------------
+DROP_METHOD:
+package Gmail;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+
+public class Drop_method {
+	WebDriver driver = new ChromeDriver();
+
+	void drop(String value) {
+		driver.get("http://output.jsbin.com/osebed/2");
+		Select dropDown=new Select(driver.findElement(By.id("fruits")));
+		switch(value){
+		case "selectByVisibleText":
+			dropDown.selectByVisibleText("Orange");
+			break;
+		case "selectByValue":
+			dropDown.selectByValue("orange");
+			break;
+		case "selectByIndex":
+			dropDown.selectByIndex(3);
+			break;
+		case "deselectAll":
+			dropDown.deselectByIndex(3);
+			break;
+		case "isMultiple":
+			if(dropDown.isMultiple()) {
+				System.out.println("true");
+			}
+			else
+				System.out.println("false");
+			break;
+		default:
+			break;
+		}
+	
+
+
+	}
+}
+-------------------------------
+FIND METHOD
+package Gmail;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class FindElements {
+	WebDriver driver = new ChromeDriver();
+	void findElement() {
+
+		//find element method:
+		String element=driver.findElement(By.className("Title_hero")).getText();
+		if(element.equals("KEY FEATURES"))
+			System.out.println(element);
+		else
+			System.out.println("type mismatch");
+		driver.close();
+	}
+}
+
+------------------------------------------
+SENDKEYS_METHOD:
+package Gmail;
+import org.openqa.selenium.By;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+public class SendKeys extends  Selenium_program1    {
+
+	//Url_passing obj2=new  Url_passing();
+	public  void locators(String sendkey_identifier,String sendkeys_values) {
+		try {
+
+			WebDriver driver = new ChromeDriver();
+			driver.get("https://www.redbus.in/bus-tickets/");
+			
+			//	obj2.url();
+			switch(sendkey_identifier){
+			case "id Locator":
+				driver.findElement(By.id("src")).sendKeys(sendkeys_values);
+				break;
+			case "CSS Selector Locator":
+				driver.findElement(By.cssSelector("input[type^='te']")).sendKeys(sendkeys_values);
+				break;
+			case "class Name  Locator":
+				driver.findElement(By.className("db")).sendKeys(sendkeys_values);
+				break;
+			case "Tag Name Locator":
+				driver.findElement(By.tagName("input")).sendKeys(sendkeys_values);
+				break;
+			default:
+				break;
+			}
+
+		}
+		catch(Exception e)
+		{
+			System.out.println("exception2");
+		}
+
+	}
+}
+
+
